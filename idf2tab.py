@@ -48,7 +48,6 @@ def libfix(s):
             print(line)
     return line
 
-
 for f in fileList:
     outlist = []  # list for storing output file lines
     output = ''   # string for storing output file
@@ -76,11 +75,13 @@ for f in fileList:
         if words[0][1:] in sections:  # check for first word (minus the '.') being a keyword
             section = words[0][1:]
         if section == 'HEADER' and len(words) == 2:  # this line contains the filename and units
-            words[0] = outfile
+            words[0] = outfile  # set project name to file name
             if words[1] == 'THOU':
                 units = 25.4/1000
                 words[1] = 'MM'
                 log = log + '   Conversion factor: ' + str(units) + '\n'
+        if section == 'HEADER' and len(words) == 5 and words[2].startswith('allegro'):  # brd or lib, middle word is system name
+            words[2] = 'pyDeeEff'  # replace with script name
         if section == 'BOARD_OUTLINE':
             if len(words) == 1 and thickness > 0.0 and not words[0].startswith('.'):
                 words[0] = '%.2f' % thickness
@@ -145,4 +146,5 @@ pyperclip.copy(outtab)  # put last set of data on clipboard
 # 1.3 - replaced filename in 2nd header line
 #       added exclude_bottom option, and ifilter = '*' to include all
 # 1.4 - moved zoffset into loop for no reason
+# 1.5 - system name is now overwritten with pyDeeEff
 # -----------------------------------------------------------------------------
