@@ -27,7 +27,7 @@ def keep(s):
         r = True
     if s in exclude:
         r = False
-    return r	
+    return r
 
 
 def libfix(s):
@@ -44,9 +44,12 @@ def libfix(s):
             return line[:-5] + '2.4'
         elif line.startswith('SMD_40P'):
             return line[:-5] + '2.5'
+        elif line.startswith('80OHMDDR'):
+            return line[:-5] + '2.6'
         else:
-            print(line)
+            print(line)  # is this a TP? TP_5010 5010 THOU 320.00
     return line
+
 
 for f in fileList:
     outlist = []  # list for storing output file lines
@@ -135,7 +138,7 @@ for f in fileList:
 with open('idf2tab.log', 'w') as logfile:
     logfile.write(log)
 
-pyperclip.copy(outtab)  # put last set of data on clipboard
+pyperclip.copy(outtab)  # put all data on clipboard
 
 
 # version history
