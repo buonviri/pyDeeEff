@@ -26,7 +26,7 @@ def GetOffset(line_list):
             y.append(float(words[2]))
         elif length == 1 and words[0] == '.END_BOARD_OUTLINE':
             return min(x), min(y)
-    return -1, -1  # if board isn't found, return error code
+    return 0, 0  # if board isn't found, return zero zero
 # example: x,y = pyDeeEff.GetOffset(bdf_list)
 
 

@@ -5,8 +5,9 @@ import pyDeeEff
 # user settings
 extensions = {'.emn': '.emn', '.emp': '.emp'}  # extension list, before and after (note that FreeCAD doesn't accept bdf)
 sections = ['HEADER','BOARD_OUTLINE','PLACEMENT','DRILLED_HOLES','ELECTRICAL','MECHANICAL']  # all other sections will be removed
+outline = ['*',]  # list of loop identifiers to include, such as '0' or '0','1' or '*' to include ALL
 include = ['U1', 'U2', 'U3', 'U4', 'U5',]  # list of components to include
-ifilter = ['*',]  # list of component prefixes to include: single letter ['U','J',] or '*' to include ALL
+ifilter = ['*',]  # list of component prefixes to include: single letter 'U','J',etc or '*' to include ALL
 exclude = ['J2',]  # list of components to exclude regardless of include filters
 exclude_bottom = True  # set to False (include bottomside components that pass the filter) or True (exclude them ALL, even ones in the filter)
 thickness = 1.57   # thickness in mm, set to -1 to keep original thickness
@@ -93,6 +94,10 @@ for f in fileList:
                 words[1] = pyDeeEff.OffsetAndConvert(words[1], xoffset, units)
                 words[2] = pyDeeEff.OffsetAndConvert(words[2], yoffset, units)
                 words[3] = pyDeeEff.RoundOffAngle(words[3])
+                if words[0] in outline or '*' in outline:
+                    pass  # keep entry because it's in the list
+                else:
+                    words = ['line has been removed',]  # remove entry
         if section == 'DRILLED_HOLES':
             if len(words) == 7:  # defines a hole
                 dia = float(words[0]) * units
