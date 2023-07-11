@@ -5,10 +5,10 @@ import pyDeeEff
 # user settings
 extensions = {'.emn': '.emn', '.emp': '.emp'}  # extension list, before and after (note that FreeCAD doesn't accept bdf)
 sections = ['HEADER','BOARD_OUTLINE','PLACEMENT','DRILLED_HOLES','ELECTRICAL','MECHANICAL']  # all other sections will be removed
-outline = ['*',]  # list of loop identifiers to include, such as '0' or '0','1' or '*' to include ALL
+outline = ['0',]  # list of loop identifiers to include, such as '0' or '0','1' or '*' to include ALL
 include = ['U1', 'U2', 'U3', 'U4', 'U5',]  # list of components to include
 ifilter = ['*',]  # list of component prefixes to include: single letter 'U','J',etc or '*' to include ALL
-exclude = ['J2',]  # list of components to exclude regardless of include filters
+exclude = ['J2','J7']  # list of components to exclude regardless of include filters
 exclude_bottom = True  # set to False (include bottomside components that pass the filter) or True (exclude them ALL, even ones in the filter)
 thickness = 1.57   # thickness in mm, set to -1 to keep original thickness
 min_pth = 0.999  # via size limit in mm, anything equal or larger gets included in PWB
@@ -32,7 +32,7 @@ def keep(s):
 
 
 def libfix(s):
-    if line.endswith('40.00'):  # default height set by Pactech in Allegro
+    if line.endswith('40.00'):  # default height set by Pactron in Allegro
         if line.startswith('85OHM'):
             return line[:-5] + '2.0'
         elif line.startswith('80-OHM'):
@@ -155,4 +155,5 @@ pyperclip.copy(outtab)  # put all data on clipboard
 #       added exclude_bottom option, and ifilter = '*' to include all
 # 1.4 - moved zoffset into loop for no reason
 # 1.5 - system name is now overwritten with pyDeeEff
+# revision control is now viewed in github rather than the list above
 # -----------------------------------------------------------------------------

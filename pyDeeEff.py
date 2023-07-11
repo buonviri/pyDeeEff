@@ -62,3 +62,5 @@ def RoundOffAngle(s):
 
 # version 1.2: added RoundOffAngle
 # version 1.4: first github upload
+# revision control is now viewed in github rather than the list above
+# -----------------------------------------------------------------------------
