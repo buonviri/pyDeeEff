@@ -11,7 +11,7 @@ ifilter = ['*',]  # list of component prefixes to include: single letter 'U','J'
 exclude = ['J2','J7']  # list of components to exclude regardless of include filters
 exclude_bottom = True  # set to False (include bottomside components that pass the filter) or True (exclude them ALL, even ones in the filter)
 thickness = 1.57   # thickness in mm, set to -1 to keep original thickness
-min_pth = 0.999  # via size limit in mm, anything equal or larger gets included in PWB
+min_pth = 0.4  # via size limit in mm, anything equal or larger gets included in PWB
 
 # preparation
 allFiles = os.listdir('.')  # get list of files/folders in current folder
