@@ -10,6 +10,7 @@ include = ['U1', 'U2', 'U3', 'U4', 'U5',]  # list of components to include
 ifilter = ['*',]  # list of component prefixes to include: single letter 'U','J',etc or '*' to include ALL
 exclude = ['J2','J7']  # list of components to exclude regardless of include filters
 exclude_bottom = True  # set to False (include bottomside components that pass the filter) or True (exclude them ALL, even ones in the filter)
+refdes_suffix = "_"  # attempt to fix freecad bug with naming
 thickness = 1.57   # thickness in mm, set to -1 to keep original thickness
 min_pth = 0.4  # via size limit in mm, anything equal or larger gets included in PWB
 
@@ -120,6 +121,7 @@ for f in fileList:
                     words = ['line has been removed',]  # empty list so it doesn't get added
             elif len(words) == 3 and keep(words[2]):  # refdes is to be kept
                 keep_next_line = True  # keep next line as well
+                words[2] = words[2] + refdes_suffix  # add optional suffix
             else:
                 words = ['line has been removed',]  # empty list so it doesn't get added
         try:

@@ -11,6 +11,7 @@ def GetTokens(x):  # standard function for splitting strings containing quoted s
 
 # requires a list of bdf lines
 # returns the bottom left corner of the board outline as tuple of floats
+# includes all outlines and cutouts; does not obey loop identifier filter defined in outline = [...]
 def GetOffset(line_list):
     from re import split as split_line
     board = False
