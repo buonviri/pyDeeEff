@@ -42,7 +42,7 @@ def GetEndSections(section_list):
 # returns a modified string
 def OffsetAndConvert(s, offset, units):
     return '%.4f' % ((float(s) - offset) * units)
-# example: new_val = pyDeeEff.OffsetAndConvert('0.1234', 1.2. 1.0)
+# example: new_val = pyDeeEff.OffsetAndConvert('0.1234', 1.2, 1.0)
 
 
 # requires a string representing an angle
