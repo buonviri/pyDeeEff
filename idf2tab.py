@@ -1,4 +1,5 @@
 import os
+import yaml
 import pyperclip
 import pyDeeEff
 
@@ -11,9 +12,9 @@ include = ['U23', 'U24', 'U25', 'U43', 'U44', 'U45',]  # list of components to i
 ifilter = ['none',]  # list of component prefixes to include: single letter 'U','J',etc or '*' to include ALL
 exclude = ['none',]  # list of components to exclude regardless of include filters
 exclude_bottom = True  # set to False (include bottomside components that pass the filter) or True (exclude them ALL, even ones in the filter)
-refdes_suffix = "_"  # attempt to fix freecad bug with naming
-thickness = 1.57   # thickness in mm, set to -1 to keep original thickness
-min_pth = 0.4  # via size limit in mm, anything equal or larger gets included in PWB
+# refdes_suffix = "_"  # attempt to fix freecad bug with naming
+# thickness = 1.57   # thickness in mm, set to -1 to keep original thickness
+# min_pth = 0.4  # via size limit in mm, anything equal or larger gets included in PWB
 
 # preparation
 allFiles = os.listdir('.')  # get list of files/folders in current folder
@@ -24,6 +25,18 @@ outtab = ''   # string for storing tab version, appended by every file rather th
 end_sections = pyDeeEff.GetEndSections(sections)  # names of end keywords based on list provided above
 
 
+def ReadSettings(filename):
+    default = {
+        'thickness': 1.57,
+        'min_pth': 0.4,
+        'refdes_suffix': '_',
+    }
+    with open('log.yaml', 'w') as f:
+        yaml.dump(default, f)
+    return default
+# End
+
+
 def keep(s):
     r = False  # default to not kept
     if s in include or s[0] in ifilter or '*' in ifilter:
@@ -31,6 +44,7 @@ def keep(s):
     if s in exclude:
         r = False
     return r
+# End
 
 
 def libfix(s):
@@ -54,6 +68,7 @@ def libfix(s):
     return line
 
 
+settings = ReadSettings('idf2tab.yaml')
 for f in fileList:
     outlist = []  # list for storing output file lines
     output = ''   # string for storing output file
@@ -92,8 +107,8 @@ for f in fileList:
         if section == 'HEADER' and len(words) == 5 and words[2].startswith('allegro'):  # brd or lib, middle word is system name
             words[2] = 'pyDeeEff'  # replace with script name
         if section == 'BOARD_OUTLINE':
-            if len(words) == 1 and thickness > 0.0 and not words[0].startswith('.'):
-                words[0] = '%.2f' % thickness
+            if len(words) == 1 and settings['thickness'] > 0.0 and not words[0].startswith('.'):
+                words[0] = '%.2f' % settings['thickness']
             if len(words) == 4:
                 # print(words)
                 words[1] = pyDeeEff.OffsetAndConvert(words[1], xoffset, units)
@@ -106,7 +121,7 @@ for f in fileList:
         if section == 'DRILLED_HOLES':
             if len(words) == 7:  # defines a hole
                 dia = float(words[0]) * units
-                if dia < min_pth:
+                if dia < settings['min_pth']:
                     words = ['line has been removed',]  # empty list so it doesn't get added
                 else:
                     words[0] = pyDeeEff.OffsetAndConvert(words[0], 0.0,     units)
@@ -125,7 +140,7 @@ for f in fileList:
                     words = ['line has been removed',]  # empty list so it doesn't get added
             elif len(words) == 3 and keep(words[2]):  # refdes is to be kept
                 keep_next_line = True  # keep next line as well
-                words[2] = words[2] + refdes_suffix  # add optional suffix
+                words[2] = words[2] + settings['refdes_suffix']  # add optional suffix
             else:
                 words = ['line has been removed',]  # empty list so it doesn't get added
         try:
