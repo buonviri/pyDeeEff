@@ -3,12 +3,13 @@ import pyperclip
 import pyDeeEff
 
 # user settings
-extensions = {'.emn': '.emn', '.emp': '.emp'}  # extension list, before and after (note that FreeCAD doesn't accept bdf)
+extensions = {'.bdf': '.emn', '.ldf': '.emp'}  # extension list, before and after (note that FreeCAD doesn't accept bdf)
 sections = ['HEADER','BOARD_OUTLINE','PLACEMENT','DRILLED_HOLES','ELECTRICAL','MECHANICAL']  # all other sections will be removed
 outline = ['0',]  # list of loop identifiers to include, such as '0' or '0','1' or '*' to include ALL
-include = ['U1', 'U2', 'U3', 'U4', 'U5',]  # list of components to include
-ifilter = ['*',]  # list of component prefixes to include: single letter 'U','J',etc or '*' to include ALL
-exclude = ['J2','J7']  # list of components to exclude regardless of include filters
+offset_override = ['none']  # set to X,Y override using floats, or 'none' to not override
+include = ['U23', 'U24', 'U25', 'U43', 'U44', 'U45',]  # list of components to include
+ifilter = ['none',]  # list of component prefixes to include: single letter 'U','J',etc or '*' to include ALL
+exclude = ['none',]  # list of components to exclude regardless of include filters
 exclude_bottom = True  # set to False (include bottomside components that pass the filter) or True (exclude them ALL, even ones in the filter)
 refdes_suffix = "_"  # attempt to fix freecad bug with naming
 thickness = 1.57   # thickness in mm, set to -1 to keep original thickness
@@ -69,6 +70,9 @@ for f in fileList:
 
     # pass the list of lines, get offset XY, add to log
     xoffset, yoffset = pyDeeEff.GetOffset(lines)
+    if len(offset_override) == 2:
+        xoffset = offset_override[0]
+        yoffset = offset_override[1]
     zoffset = 0.0  # probably won't get used
     log = log + '   Offsets: ' +  '%.2f' % xoffset + ', ' + '%.2f' % yoffset + '\n'
 
