@@ -6,17 +6,17 @@ import pyDeeEff
 
 def ReadSettings(filename):
     default_settings = {
-        'thickness': 1.57,
-        'min_pth': 0.4,
-        'refdes_suffix': '_',
-        'exclude_bottom': True,
-        'sections': ['HEADER','BOARD_OUTLINE','PLACEMENT','DRILLED_HOLES','ELECTRICAL','MECHANICAL'],
-        'outline': ['0'],
-        'offset_override': ['none'],
+        'extensions': {'.bdf': '.emn', '.ldf': '.emp'},
         'include': ['U1'],
         'ifilter': ['none'],
         'exclude': ['none'],
-        'extensions': {'.bdf': '.emn', '.ldf': '.emp'}
+        'exclude_bottom': True,
+        'outline': ['0'],
+        'thickness': 1.57,
+        'offset_override': ['none'],
+        'min_pth': 0.4,
+        'refdes_suffix': '_',
+        'sections': ['HEADER','BOARD_OUTLINE','PLACEMENT','DRILLED_HOLES','ELECTRICAL','MECHANICAL'],
     }
     try:
         with open('idf2tab.yaml', 'r') as f: 
