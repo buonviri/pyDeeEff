@@ -11,7 +11,7 @@ offset_override = ['none']  # set to X,Y override using floats, or 'none' to not
 include = ['U23', 'U24', 'U25', 'U43', 'U44', 'U45',]  # list of components to include
 ifilter = ['none',]  # list of component prefixes to include: single letter 'U','J',etc or '*' to include ALL
 exclude = ['none',]  # list of components to exclude regardless of include filters
-exclude_bottom = True  # set to False (include bottomside components that pass the filter) or True (exclude them ALL, even ones in the filter)
+# exclude_bottom = True  # set to False (include bottomside components that pass the filter) or True (exclude them ALL, even ones in the filter)
 # refdes_suffix = "_"  # attempt to fix freecad bug with naming
 # thickness = 1.57   # thickness in mm, set to -1 to keep original thickness
 # min_pth = 0.4  # via size limit in mm, anything equal or larger gets included in PWB
@@ -30,6 +30,7 @@ def ReadSettings(filename):
         'thickness': 1.57,
         'min_pth': 0.4,
         'refdes_suffix': '_',
+        'exclude_bottom': True,
     }
     try:
         with open('idf2tab.yaml', 'r') as f: 
@@ -144,7 +145,7 @@ for f in fileList:
                 words[0] = pyDeeEff.OffsetAndConvert(words[0], xoffset, units)
                 words[1] = pyDeeEff.OffsetAndConvert(words[1], yoffset, units)
                 words[2] = pyDeeEff.OffsetAndConvert(words[2], zoffset, units)
-                if words[4] == 'BOTTOM' and exclude_bottom:
+                if words[4] == 'BOTTOM' and settings['exclude_bottom']:
                     outlist.pop()  # remove last line from output list
                     words = ['line has been removed',]  # empty list so it doesn't get added
             elif len(words) == 3 and keep(words[2]):  # refdes is to be kept
