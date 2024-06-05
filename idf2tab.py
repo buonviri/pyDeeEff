@@ -26,14 +26,23 @@ end_sections = pyDeeEff.GetEndSections(sections)  # names of end keywords based 
 
 
 def ReadSettings(filename):
-    default = {
+    default_settings = {
         'thickness': 1.57,
         'min_pth': 0.4,
         'refdes_suffix': '_',
     }
+    try:
+        with open('idf2tab.yaml', 'r') as f: 
+            user_settings = yaml.safe_load(f)
+    except:
+        user_settings = {}  # blank one if file doesn't work
+    for setting in default_settings:
+        if setting not in user_settings:
+            user_settings[setting] = default_settings[setting]  # set to default
+            print('Adding ' + setting + ' = ' + str(default_settings[setting]))
     with open('log.yaml', 'w') as f:
-        yaml.dump(default, f)
-    return default
+        yaml.dump(user_settings, f)
+    return user_settings
 # End
 
 
