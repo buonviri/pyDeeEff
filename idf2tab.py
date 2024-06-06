@@ -43,8 +43,10 @@ def keep(s):
 # End
 
 
+# this function is an example of how to replace allegro default height with something smaller
+# it is currently not called by the script
 def libfix(s):
-    if line.endswith('40.00'):  # default height set by Pactron in Allegro
+    if line.endswith('40.00'):  # default height in Allegro
         if line.startswith('85OHM'):
             return line[:-5] + '2.0'
         elif line.startswith('80-OHM'):
@@ -60,7 +62,7 @@ def libfix(s):
         elif line.startswith('80OHMDDR'):
             return line[:-5] + '2.6'
         else:
-            print(line)  # is this a TP? TP_5010 5010 THOU 320.00
+            print(line)
     return line
 
 
@@ -96,7 +98,8 @@ for f in fileList:
 
     keep_next_line = False
     for line in lines:
-        line = libfix(line)  # correct height errors in library file
+        # libfix is disabled
+        # line = libfix(line)  # correct height errors in library file
         words = pyDeeEff.GetTokens(line)  # split into tokens, keeps quotes (but google strips them later)
         length = len(words)  # length of list of words
         if words[0][1:] in settings['sections']:  # check for first word (minus the '.') being a keyword
