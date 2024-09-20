@@ -1,4 +1,5 @@
 import os
+import time
 import yaml
 import pyperclip
 import pyDeeEff
@@ -67,11 +68,15 @@ def libfix(s):
 
 
 def mylibfix(s):
-    if line.endswith('2000.00'):  # arbitrary default height
-        if line.startswith('FIDUCIAL'):  # lib part name
-            return line[:-7] + '0.1'  # length of height string, plus replacement string
-        else:
-            print(line)  # unrecognized part name with matching height
+    oldheight = '2000.0000'
+    newheight = '0.1'
+    partstofix = ['FIDUCIAL', 'FAKE_PART_THAT_DOES_NOT_EXIST']
+    if line.endswith(oldheight):  # arbitrary default height
+        for p in partstofix:
+            if line.startswith(p):  # lib part name
+                return line[:-len(oldheight)] + newheight  # length of height string, plus replacement string
+        print('\nHeight match not found in list: ' + line)
+        time.sleep(2)
     return line
 
 
