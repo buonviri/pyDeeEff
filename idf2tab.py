@@ -66,6 +66,15 @@ def libfix(s):
     return line
 
 
+def mylibfix(s):
+    if line.endswith('2000.00'):  # arbitrary default height
+        if line.startswith('FIDUCIAL'):  # lib part name
+            return line[:-7] + '0.1'  # length of height string, plus replacement string
+        else:
+            print(line)  # unrecognized part name with matching height
+    return line
+
+
 # start of script
 settings = ReadSettings('idf2tab.yaml')
 allFiles = os.listdir('..\\')  # get list of files/folders in folder above
@@ -98,8 +107,8 @@ for f in fileList:
 
     keep_next_line = False
     for line in lines:
-        # libfix is disabled
-        # line = libfix(line)  # correct height errors in library file
+        # libfix is disabled, now uses mylibfix
+        line = mylibfix(line)  # correct height errors in library file
         words = pyDeeEff.GetTokens(line)  # split into tokens, keeps quotes (but google strips them later)
         length = len(words)  # length of list of words
         if words[0][1:] in settings['sections']:  # check for first word (minus the '.') being a keyword
