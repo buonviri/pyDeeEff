@@ -18,6 +18,9 @@ def ReadSettings(filename):
         'min_pth': 0.4,
         'refdes_suffix': '_',
         'sections': ['HEADER','BOARD_OUTLINE','PLACEMENT','DRILLED_HOLES','ELECTRICAL','MECHANICAL'],
+        'oldheight': '99999.9999',
+        'newheight': '99999.9999',
+        'fixheight': ['FAKE_PART_THAT_DOES_NOT_EXIST'],
     }
     try:
         with open('idf2tab.yaml', 'r') as f: 
@@ -46,7 +49,7 @@ def keep(s):
 
 # this function is an example of how to replace allegro default height with something smaller
 # it is currently not called by the script
-def libfix(s):
+def oldlibfix(s):
     if line.endswith('40.00'):  # default height in Allegro
         if line.startswith('85OHM'):
             return line[:-5] + '2.0'
@@ -67,17 +70,14 @@ def libfix(s):
     return line
 
 
-def mylibfix(s):
-    oldheight = '2000.0000'
-    newheight = '0.1'
-    partstofix = ['FIDUCIAL', 'FAKE_PART_THAT_DOES_NOT_EXIST']
-    if line.endswith(oldheight):  # arbitrary default height
-        for p in partstofix:
-            if line.startswith(p):  # lib part name
-                return line[:-len(oldheight)] + newheight  # length of height string, plus replacement string
-        print('\nHeight match not found in list: ' + line)
+def libfix(s, t):
+    if s.endswith(t['oldheight']):  # arbitrary default height used by some tools
+        for p in t['fixheight']:
+            if s.startswith(p):  # lib part name
+                return s[:-len(t['oldheight'])] + t['newheight']  # minus length of height string, plus replacement string
+        print('\nHeight match not found in list: ' + s)
         time.sleep(2)
-    return line
+    return s
 
 
 # start of script
@@ -112,8 +112,7 @@ for f in fileList:
 
     keep_next_line = False
     for line in lines:
-        # libfix is disabled, now uses mylibfix
-        line = mylibfix(line)  # correct height errors in library file
+        line = libfix(line, settings)  # correct height errors in library file
         words = pyDeeEff.GetTokens(line)  # split into tokens, keeps quotes (but google strips them later)
         length = len(words)  # length of list of words
         if words[0][1:] in settings['sections']:  # check for first word (minus the '.') being a keyword
